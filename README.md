@@ -50,18 +50,18 @@ Book_N_Appointment/
 ### Customer Side (`/`)
 Customer fills in: Full Name, WhatsApp Number, Appointment Date & Time. On submit, the appointment is saved to Supabase and Twilio instantly sends a WhatsApp confirmation. A success screen then shows the appointment summary.
 
-![Booking Form — Empty](output/form-empty.png)
+![Booking Form — Empty](output/form-empty.png.png)
 
-![Booking Form — Filled](output/form-filled.png)
+![Booking Form — Filled](output/form-filled.png.png)
 
-![Appointment Confirmed Screen](output/success-screen.png)
+![Appointment Confirmed Screen](output/success-screen.png.png)
 
 ---
 
 ### WhatsApp Messages
 Confirmation sent immediately on booking. Reminder sent automatically within 1 hour of appointment time.
 
-![WhatsApp Messages — Confirmation and Reminder](output/whatsapp-messages.png)
+![WhatsApp Messages — Confirmation and Reminder](output/whatsapp-messages.png.png)
 
 **Confirmation message format:**
 ```
@@ -84,9 +84,9 @@ For queries, contact: support@booknnappoint.com
 ### Admin Side (`/admin.html`)
 Password-protected login. Live dashboard showing all appointments with stats and auto-refresh every 10 seconds.
 
-![Admin Login](output/admin-login.png)
+![Admin Login](output/admin-login.png.png)
 
-![Admin Dashboard](output/admin-dashboard.png)
+![Admin Dashboard](output/admin-dashboard.png.png)
 
 ---
 
