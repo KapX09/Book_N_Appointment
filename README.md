@@ -205,4 +205,5 @@ node server.js
 ## Summary
 
 A system like this applies directly to any business that runs on scheduled appointments like medical clinics, sales teams, service centers, field operations. It can be extended to support multiple agents, two-way customer replies, cancellation handling, and CRM integration. The foundation is in place; scaling it is a matter of configuration, not rebuilding.
+
 ---
