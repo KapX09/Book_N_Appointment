@@ -3,7 +3,7 @@
 ### WhatsApp Appointment Reminder System
 > Built as a practical test.
 
-**Live Link:** `[Coming soon — deploying on Render]`
+**Live Link:** [Book N Appoint](https://book-n-appointment.onrender.com)
 
 ---
 
