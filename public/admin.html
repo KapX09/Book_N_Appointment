@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Book N Appoint</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* LOGIN */
+    #loginScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .login-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+    .login-card h2 { color: #1a73e8; margin-bottom: 8px; font-size: 1.5rem; }
+    .login-card p { color: #888; font-size: 0.85rem; margin-bottom: 24px; }
+    .login-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #dde3ec;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      margin-bottom: 14px;
+    }
+    .login-card input:focus { border-color: #1a73e8; }
+    .login-card button {
+      width: 100%;
+      padding: 12px;
+      background: #1a73e8;
+      color: white;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .login-card button:hover { background: #1558b0; }
+    #loginError { color: #c62828; font-size: 0.85rem; margin-top: 10px; display: none; }
+
+    /* DASHBOARD */
+    #dashboard { display: none; }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      margin-bottom: 24px;
+    }
+    .topbar h1 { color: #1a73e8; font-size: 1.4rem; }
+    .topbar span { color: #888; font-size: 0.85rem; }
+    .logout {
+      background: #fdecea;
+      color: #c62828;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px 24px;
+      flex: 1;
+      min-width: 140px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .stat-card .num { font-size: 2rem; font-weight: 700; color: #1a73e8; }
+    .stat-card .label { font-size: 0.8rem; color: #888; margin-top: 4px; }
+    .table-wrap {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      overflow-x: auto;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: #f8faff; }
+    th {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 0.8rem;
+      color: #888;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #eef0f4;
+    }
+    td {
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      color: #333;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #f8faff; }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+    .badge.sent { background: #e6f4ea; color: #2e7d32; }
+    .badge.pending { background: #fff3e0; color: #e65100; }
+    .refresh { font-size: 0.8rem; color: #aaa; margin-top: 12px; text-align: right; padding-right: 8px; }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div id="loginScreen">
+    <div class="login-card">
+      <h2>Admin Login</h2>
+      <p>Book N Appoint — Dashboard Access</p>
+      <input id="keyInput" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')login()" />
+      <button onclick="login()">Login</button>
+      <div id="loginError">Incorrect password. Try again.</div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboard">
+    <div class="topbar">
+      <h1> Book N Appoint — Admin</h1>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span id="lastUpdate"></span>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <div class="num" id="statTotal">—</div>
+        <div class="label">Total Appointments</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statToday">—</div>
+        <div class="label">Today</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="statReminder">—</div>
+        <div class="label">Reminders Sent</div>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Appointment Time</th>
+            <th>Booked At</th>
+            <th>Reminder</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+    <div class="refresh" id="refreshNote"></div>
+  </div>
+
+  <script>
+    let adminKey = '';
+
+    function login() {
+      const key = document.getElementById('keyInput').value.trim();
+      if (!key) return;
+      adminKey = key;
+      loadAppointments(true);
+    }
+
+    function logout() {
+      adminKey = '';
+      document.getElementById('dashboard').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      document.getElementById('keyInput').value = '';
+    }
+
+    async function loadAppointments(isLogin = false) {
+      try {
+        const res = await fetch('/api/appointments', {
+          headers: { 'x-admin-key': adminKey }
+        });
+
+        if (res.status === 401) {
+          if (isLogin) {
+            document.getElementById('loginError').style.display = 'block';
+          }
+          return;
+        }
+
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+
+        const data = await res.json();
+        renderTable(data);
+        renderStats(data);
+
+        const now = new Date();
+        document.getElementById('lastUpdate').innerText = 'Updated: ' + now.toLocaleTimeString();
+        document.getElementById('refreshNote').innerText = 'Auto-refreshes every 10 seconds';
+
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderStats(data) {
+      const today = new Date().toDateString();
+      const todayCount = data.filter(a => new Date(a.appointment_time).toDateString() === today).length;
+      const reminderCount = data.filter(a => a.reminder_sent).length;
+      document.getElementById('statTotal').innerText = data.length;
+      document.getElementById('statToday').innerText = todayCount;
+      document.getElementById('statReminder').innerText = reminderCount;
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#aaa;padding:30px;">No appointments yet.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map((a, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td><strong>${a.customer_name}</strong></td>
+          <td>${a.phone}</td>
+          <td>${new Date(a.appointment_time).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+          <td>${new Date(a.created_at).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+          <td><span class="badge ${a.reminder_sent ? 'sent' : 'pending'}">${a.reminder_sent ? '✅ Sent' : '⏳ Pending'}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    setInterval(() => {
+      if (adminKey) loadAppointments();
+    }, 10000);
+  </script>
+</body>
+</html>
