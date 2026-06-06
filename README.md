@@ -1,9 +1,8 @@
-# Book_N_Appointment
-
+# Book N Appoint
 ### WhatsApp Appointment Reminder System
-> Built as a practical test.
+> Built as a practical test
 
-**Live Link:** [Book N Appoint](https://book-n-appointment.onrender.com)
+**Live Link:** https://book-n-appointment.onrender.com
 
 ---
 
@@ -12,6 +11,7 @@
 Book N Appoint is a full-stack appointment booking system that allows customers to schedule appointments through a web form and instantly receive a WhatsApp confirmation message. Admins can monitor all bookings through a password-protected live dashboard. An automated background job sends reminder messages one hour before each appointment.
 
 This was built to demonstrate real-world automation skills: API integration, database management, scheduled jobs, and clean frontend design.
+
 
 ---
 
@@ -41,46 +41,52 @@ Book_N_Appointment/
 | Messaging | Twilio WhatsApp Sandbox |
 | Scheduler | node-cron |
 | Frontend | HTML + Vanilla JS |
-| Hosting | Render (backend + frontend) |
+| Hosting | Render |
 
 ---
 
 ## What It Does
 
 ### Customer Side (`/`)
-- Customer fills in: Full Name, WhatsApp Number, Appointment Date & Time
-- On submit: appointment is saved to Supabase database
-- Twilio immediately sends a WhatsApp confirmation to the customer's number
-- Success screen shows appointment summary with confirmed details
+Customer fills in: Full Name, WhatsApp Number, Appointment Date & Time. On submit, the appointment is saved to Supabase and Twilio instantly sends a WhatsApp confirmation. A success screen then shows the appointment summary.
 
-**WhatsApp Confirmation Message:**
+![Booking Form — Empty](screenshots/form-empty.png)
+
+![Booking Form — Filled](screenshots/form-filled.png)
+
+![Appointment Confirmed Screen](screenshots/success-screen.png)
+
+---
+
+### WhatsApp Messages
+Confirmation sent immediately on booking. Reminder sent automatically within 1 hour of appointment time.
+
+![WhatsApp Messages — Confirmation and Reminder](screenshots/whatsapp-messages.png)
+
+**Confirmation message format:**
 ```
 Hello Rahul Sharma,
-Your appointment has been confirmed at 12:00 am on Sunday, 7 June 2026.
+Your appointment has been confirmed at 02:45 am on Sunday, 7 June 2026.
 For queries, contact: support@booknnappoint.com
 — Book N Appoint
 ```
+
+**Reminder message format:**
+```
+Hello Rahul Sharma,
+Reminder: Your appointment is coming up at 02:45 am today!
+For queries, contact: support@booknnappoint.com
+— Book N Appoint
+```
+
+---
 
 ### Admin Side (`/admin.html`)
-- Password-protected login (key stored in `.env`, never in code)
-- Live dashboard showing all appointments
-- Stats: Total appointments, Today's count, Reminders sent
-- Table: Name, Phone, Appointment Time, Booked At, Reminder Status
-- Auto-refreshes every 10 seconds without page reload
+Password-protected login. Live dashboard showing all appointments with stats and auto-refresh every 10 seconds.
 
-### Automatic Reminder
-- Background cron job runs every 60 seconds
-- Checks for appointments within the next 1 hour where reminder has not been sent
-- Sends WhatsApp reminder automatically
-- Marks `reminder_sent = true` in database to prevent duplicates
+![Admin Login](screenshots/admin-login.png)
 
-**WhatsApp Reminder Message:**
-```
-Hello Rahul Sharma,
-Reminder: Your appointment is coming up at 12:00 am today!
-For queries, contact: support@booknnappoint.com
-— Book N Appoint
-```
+![Admin Dashboard](screenshots/admin-dashboard.png)
 
 ---
 
@@ -196,14 +202,14 @@ node server.js
 |------|-----|
 | View all appointments | Login at `/admin.html` |
 | Change admin password | Update `ADMIN_KEY` in `.env`, restart server |
-| Check reminder logs | Watch CMD terminal for cron output |
+| Check reminder logs | Watch terminal for cron output |
 | Add new sandbox numbers | Twilio Console → WhatsApp Sandbox settings |
 | View raw database | Supabase → Table Editor → appointments |
 
 ---
 
-## Summary
 
-A system like this applies directly to any business that runs on scheduled appointments like medical clinics, sales teams, service centers, field operations. It can be extended to support multiple agents, two-way customer replies, cancellation handling, and CRM integration. The foundation is in place; scaling it is a matter of configuration, not rebuilding.
+A system like this applies directly to any business that runs on scheduled appointments — medical clinics, sales teams, service centers, field operations. It can be extended to support multiple agents, two-way customer replies, cancellation handling, and CRM integration. The foundation is in place; scaling it is a matter of configuration, not rebuilding.
+
 
 ---
