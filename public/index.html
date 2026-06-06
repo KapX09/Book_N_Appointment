@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book N Appoint</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 440px;
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .logo h1 {
+      font-size: 1.8rem;
+      color: #1a73e8;
+      font-weight: 700;
+    }
+    .logo p {
+      color: #888;
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      margin-bottom: 6px;
+      margin-top: 18px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #dde3ec;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #222;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input:focus { border-color: #1a73e8; }
+    button.primary {
+      width: 100%;
+      margin-top: 26px;
+      padding: 13px;
+      background: #1a73e8;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    button.primary:hover { background: #1558b0; }
+    button.primary:disabled { background: #93b8f5; cursor: not-allowed; }
+
+    /* SUCCESS SCREEN */
+    #successScreen { display: none; text-align: center; }
+    .checkmark {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: #e6f4ea;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .checkmark svg { width: 36px; height: 36px; }
+    #successScreen h2 {
+      color: #2e7d32;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+    #successScreen p {
+      color: #555;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 6px;
+    }
+    #successScreen .detail {
+      background: #f8faff;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin: 18px 0;
+      text-align: left;
+      font-size: 0.9rem;
+      color: #333;
+      line-height: 1.8;
+    }
+    button.secondary {
+      width: 100%;
+      padding: 12px;
+      background: white;
+      color: #1a73e8;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: 1.5px solid #1a73e8;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.2s;
+    }
+    button.secondary:hover { background: #f0f4ff; }
+
+    #errorMsg {
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 8px;
+      background: #fdecea;
+      color: #c62828;
+      font-size: 0.88rem;
+      display: none;
+      text-align: center;
+    }
+    .admin-link {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 0.8rem;
+      color: #bbb;
+    }
+    .admin-link a {
+      color: #aaa;
+      text-decoration: none;
+      border-bottom: 1px dashed #ccc;
+    }
+    .admin-link a:hover { color: #1a73e8; }
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <!-- FORM -->
+    <div id="formScreen">
+      <div class="logo">
+        <h1>Book N Appoint</h1>
+        <p>Schedule your appointment in seconds</p>
+      </div>
+
+      <label for="name">Full Name</label>
+      <input id="name" type="text" placeholder="e.g. Rahul Sharma" />
+
+      <label for="phone">WhatsApp Number</label>
+      <input id="phone" type="tel" placeholder="e.g. +919876543210" />
+
+      <label for="time">Appointment Date & Time</label>
+      <input id="time" type="datetime-local" />
+
+      <button class="primary" id="btn" onclick="submitForm()">Confirm Appointment</button>
+      <div id="errorMsg"></div>
+
+      <div class="admin-link">
+        <a href="/admin.html">Admin access</a>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="successScreen">
+      <div class="checkmark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#2e7d32" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+      <h2>Appointment Confirmed</h2>
+      <p>A WhatsApp confirmation has been sent to your number.</p>
+      <div class="detail" id="summaryBox"></div>
+      <button class="primary" onclick="resetForm()">Book Another Appointment</button>
+    </div>
+
+  </div>
+
+  <script>
+    async function submitForm() {
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const time = document.getElementById('time').value;
+      const errDiv = document.getElementById('errorMsg');
+      const btn = document.getElementById('btn');
+
+      errDiv.style.display = 'none';
+
+      if (!name || !phone || !time) {
+        errDiv.innerText = 'Please fill in all fields.';
+        errDiv.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = 'Booking...';
+
+      try {
+        const res = await fetch('/api/appointments', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ customer_name: name, phone, appointment_time: new Date(time).toISOString() })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          const apptDate = new Date(time);
+          document.getElementById('summaryBox').innerHTML =
+            `<strong>Name:</strong> ${name}<br>
+             <strong>Phone:</strong> ${phone}<br>
+             <strong>Date:</strong> ${apptDate.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}<br>
+             <strong>Time:</strong> ${apptDate.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
+
+          document.getElementById('formScreen').style.display = 'none';
+          document.getElementById('successScreen').style.display = 'block';
+        } else {
+          errDiv.innerText = 'Something went wrong. Please try again.';
+          errDiv.style.display = 'block';
+        }
+      } catch (e) {
+        errDiv.innerText = 'Server error. Please try again.';
+        errDiv.style.display = 'block';
+      }
+
+      btn.disabled = false;
+      btn.innerText = 'Confirm Appointment';
+    }
+
+    function resetForm() {
+      document.getElementById('name').value = '';
+      document.getElementById('phone').value = '';
+      document.getElementById('time').value = '';
+      document.getElementById('successScreen').style.display = 'none';
+      document.getElementById('formScreen').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
